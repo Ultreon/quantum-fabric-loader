@@ -38,6 +38,7 @@ import net.fabricmc.loader.impl.FabricLoaderImpl;
 import net.fabricmc.loader.impl.game.GameProvider;
 import net.fabricmc.loader.impl.launch.FabricLauncher;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
+import net.fabricmc.loader.impl.util.LoaderUtil;
 
 public class GetNonFabricModsTest {
 	private FabricLoaderImpl loader;
@@ -76,11 +77,11 @@ public class GetNonFabricModsTest {
 	 */
 	@Test
 	public void testGetNonFabricMods() throws ModResolutionException {
-		List<ModCandidate> acceptedMods = discoverer.discoverMods(loader, new HashMap<String, Set<ModCandidate>>());
+		List<ModCandidateImpl> acceptedMods = discoverer.discoverMods(loader, new HashMap<String, Set<ModCandidateImpl>>());
 
 		boolean foundDummyFabricMod = false;
 
-		for (ModCandidate acceptedMod : acceptedMods) {
+		for (ModCandidateImpl acceptedMod : acceptedMods) {
 			if (acceptedMod.getId().equals("dummy")) {
 				foundDummyFabricMod = true;
 				break;
@@ -102,8 +103,8 @@ public class GetNonFabricModsTest {
 	public static class MockCandidateFinder implements ModCandidateFinder {
 		@Override
 		public void findCandidates(ModCandidateConsumer out) {
-			out.accept(Paths.get("./src/test/resources/testing/discovery/dummyFabricMod.jar"), false);
-			out.accept(Paths.get("./src/test/resources/testing/discovery/dummyNonFabricMod.jar"), false);
+			out.accept(LoaderUtil.normalizePath(Paths.get("src/test/resources/testing/discovery/dummyFabricMod.jar")), false);
+			out.accept(LoaderUtil.normalizePath(Paths.get("src/test/resources/testing/discovery/dummyNonFabricMod.jar")), false);
 		}
 	}
 }
